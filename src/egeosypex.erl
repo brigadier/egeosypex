@@ -214,7 +214,7 @@ unpack_one(<<"T">>, Data) ->
 	<<I:8/little-unsigned-integer, Data2/binary>> = Data,
 	{I, Data2};
 
-unpack_one(<<"S">>, Data) ->
+unpack_one(<<"s">>, Data) ->
 	<<I:16/little-signed-integer, Data2/binary>> = Data,
 	{I, Data2};
 
