@@ -1,12 +1,14 @@
 egeosypex
 =====
 
-Sypex Geolocation library. For Sypex Geo City in utf-8 encoding.
+Erlang library for Sypex Geolocation databases.
+Supports Sypex Geo City in utf-8 encoding.
 
 Read more about the data: http://sypexgeo.net
 
 
-Likely you would use a pool of gen_server processes for access to this API.
+Likely you would use a pool of gen_server
+processes for access to this API.
 
 Build
 -----
