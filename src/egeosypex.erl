@@ -74,10 +74,12 @@ lookup({A, B, C, D} = _IP,
 				country_data = Countries,
 				id_len = IDLen,
 				block_len = BlockSize} = Meta) ->
-	<<_:1/binary, B3IP/binary>> = WIP = <<A:8/integer, B:8/integer, C:8/integer, D:8/integer>>,
+
+	B3IP = <<B:8/integer, C:8/integer, D:8/integer>>,
+	WIP = (A bsl 24) bor (B bsl 16) bor (C bsl 8) bor D,
+
 	Min_ = element(A, FBI),
 	Max_ = element(A + 1, FBI),
-
 	%{Min, Max} = ...
 	if
 		Max_ - Min_ > Blocks ->
@@ -181,10 +183,10 @@ search_idx(WIP, Min, Max, MainIndex) when (Max - Min) > 8 ->
 			search_idx(WIP, Min, Offset, MainIndex)
 	end;
 
-search_idx(_WIP, Min, Max, _MainIndex) when Min >= Max -> Min;
 
-search_idx(WIP, Min, Max, MainIndex) when WIP > element(Min + 1, MainIndex) ->
+search_idx(WIP, Min, Max, MainIndex) when WIP > element(Min + 1, MainIndex), Min + 1 < Max ->
 	search_idx(WIP, Min + 1, Max, MainIndex);
+
 
 search_idx(_WIP, Min, _Max, _MainIndex) ->
 	Min.
@@ -259,10 +261,10 @@ unpack_one(<<"c", NBin/binary>>, Data) ->
 
 unpack_one(<<"n", NBin/binary>>, Data) ->
 	N = binary_to_integer(NBin),
-	<<I:16/little-unsigned-integer, Data2/binary>> = Data,
+	<<I:16/little-signed-integer, Data2/binary>> = Data,
 	{{decimal, I, N}, Data2};
 
 unpack_one(<<"N", NBin/binary>>, Data) ->
 	N = binary_to_integer(NBin),
-	<<I:32/little-unsigned-integer, Data2/binary>> = Data,
+	<<I:32/little-signed-integer, Data2/binary>> = Data,
 	{{decimal, I, N}, Data2}.
